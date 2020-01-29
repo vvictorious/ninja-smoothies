@@ -26,21 +26,25 @@ export default {
   },
   methods: { 
     deleteSmoothie (id) {
-      this.smoothies = this.smoothies.filter(smoothie => {
-        return smoothie.id != id
+      //delete doc from firestore
+      db.collection('smoothies').doc(id).delete()
+      .then( () => {
+        this.smoothies = this.smoothies.filter(smoothie => {
+          return smoothie.id != id
+        })
       })
     }
   }, 
   created () {
     //fetch data from the firestore
     db.collection('smoothies').get()
-    .then(snapshot => {
-      snapshot.forEach(doc => {
-        let smoothie = doc.data()
-        smoothie.id = doc.id
-        this.smoothies.push(smoothie)
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          let smoothie = doc.data()
+          smoothie.id = doc.id
+          this.smoothies.push(smoothie)
+        })
       })
-    })
   }
 }
 </script>
